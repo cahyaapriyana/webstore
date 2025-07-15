@@ -57,6 +57,7 @@ class AddToCart extends Component
 
 
         $this->dispatch('cart-updated');
+        return redirect()->route('cart');
     }
 
     public function render()
