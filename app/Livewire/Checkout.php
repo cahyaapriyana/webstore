@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Contract\CartServiceInterface;
 use App\Data\CartData;
 use App\Data\RegionData;
+use App\Services\RegionQueryService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Number;
 use Livewire\Component;
@@ -77,35 +78,25 @@ class Checkout extends Component
     }
 
 
-    public function getRegionsProperty() : DataCollection
+    public function getRegionsProperty(RegionQueryService $query_service) : DataCollection
     {
-        $data = [
-            [
-               'code' => '001',
-               'province' => 'Jawa Barat',
-               'city' => 'Kota Bandung',
-               'district' => 'District',
-               'sub_district' => 'Sub District',
-               'postal_code' => '1234',
-            ],
-            [
-                'code' => '002',
-                'province' => 'Jawa Barat 2',
-                'city' => 'Kota Bandung 2',
-                'district' => 'District',
-                'sub_district' => 'Sub District',
-                'postal_code' => '123324',
-             ]
-            ];
+        
 
             if (!data_get($this->region_selector, 'keyword')){
                 $data =[];
+                return new DataCollection(RegionData::class, []);
             }
 
-            return new DataCollection(RegionData::class, $data);
+            return $query_service->searchRegionByName(
+                data_get($this->region_selector, 'keyword')
+            );
+
+
+
     }
 
-    public function getRegionProperty() : ?RegionData
+ 
+    public function getRegionProperty(RegionQueryService $query_service) : ?RegionData
     {
         {
             $region_selected = data_get($this->region_selector, 'region_selected');
@@ -113,7 +104,7 @@ class Checkout extends Component
                 return null;
             }
 
-            return $this->regions->toCollection()->first(fn(RegionData $region) => $region->code == $region_selected);
+            return $query_service->searchRegionByCode($region_selected);
         }
     }
 
