@@ -6,6 +6,7 @@ use App\Contract\CartServiceInterface;
 use App\Data\CartData;
 use App\Data\RegionData;
 use App\Data\ShippingData;
+use App\Rules\ValidShippingHash;
 use App\Services\RegionQueryService;
 use App\Services\ShippingMethodService;
 use Illuminate\Support\Collection;
@@ -61,12 +62,12 @@ class Checkout extends Component
             'data.email' => ['required', 'max:255','email:dns'],
             'data.phone' => ['required','min:3', 'max:255'],
             'data.shipping_line' => ['required','min:10', 'max:255'],
-            'data.destination_region_code' => ['required'],
-            'shipping_hash' => ['required']
+            'data.destination_region_code' => ['required', 'exists:regions,code'],
+            'data.shipping_hash' => ['required', new ValidShippingHash()]
         ];
     }
     
-    
+
     public function calculateTotal() 
     {
         data_set($this->summaries, 'sub_total', $this->cart->total);
