@@ -6,7 +6,9 @@ use App\Contract\CartServiceInterface;
 use App\Data\CartData;
 use App\Data\RegionData;
 use App\Data\ShippingData;
+use App\Rules\ValidPaymentMethodHash;
 use App\Rules\ValidShippingHash;
+use App\Services\PaymentMethodQueryService;
 use App\Services\RegionQueryService;
 use App\Services\ShippingMethodService;
 use Illuminate\Support\Collection;
@@ -24,7 +26,8 @@ class Checkout extends Component
         'phone' => null,
         'address_line' => null,
         'destination_region_code' => null,
-        'shipping_hash' => null
+        'shipping_hash' => null,
+        'payment_method_hash' => null
 
     ];
 
@@ -36,6 +39,10 @@ class Checkout extends Component
 
     public array $shipping_selector = [
         'shipping_method' => null
+    ];
+
+    public array $payment_method_selector = [
+        'payment_method_selected' => null
     ];
 
     public array $summaries = [
@@ -52,6 +59,11 @@ class Checkout extends Component
         if (!Gate::inspect('is_stock_available')->allowed()) {
             return redirect()->route('cart');
         }
+
+        if($this->cart->total_quantity <= 0){
+            return redirect()->route('cart');
+        }
+
         $this->calculateTotal();
     }
 
@@ -61,9 +73,10 @@ class Checkout extends Component
             'data.full_name' => ['required', 'min:3', 'max:255'],
             'data.email' => ['required', 'max:255','email:dns'],
             'data.phone' => ['required','min:3', 'max:255'],
-            'data.shipping_line' => ['required','min:10', 'max:255'],
+            'data.address_line' => ['required','min:10', 'max:255'],
             'data.destination_region_code' => ['required', 'exists:regions,code'],
-            'data.shipping_hash' => ['required', new ValidShippingHash()]
+            'data.shipping_hash' => ['required', new ValidShippingHash()],
+            'data.payment_method_hash' =>['required', new ValidPaymentMethodHash()]
         ];
     }
     
@@ -171,6 +184,18 @@ class Checkout extends Component
     {
         data_set($this->data, 'shipping_hash', $value);
         $this->calculateTotal();
+    }
+
+    public function getPaymentMethodsProperty(
+        PaymentMethodQueryService $query_service
+    ) : DataCollection
+    {
+        return $query_service->getPaymentMethods();
+    }
+
+    public function updatedPaymentMethodSelectorPaymentMethodSelected($value)
+    {
+        data_set($this->data, 'payment_method_hash', $value);
     }
 
     public function placeAndOrder()
