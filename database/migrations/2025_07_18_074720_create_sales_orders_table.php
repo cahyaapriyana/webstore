@@ -49,7 +49,7 @@ return new class extends Migration
             $table->string('payment_driver');
             $table->string('payment_method');
             $table->string('payment_label');
-            $table->text('payment_load');
+            $table->text('payment_payload');
             $table->timestamp('payment_paid_at')->nullable();
 
             $table->double('sub_total', 11, 2);
