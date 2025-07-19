@@ -7,6 +7,7 @@ use Spatie\LaravelData\DataCollection;
 use App\Contract\PaymentDriverInterface;
 use App\Data\PaymentData;
 use App\Data\SalesOrderData;
+use App\Models\SalesOrder;
 
 class OfflinePaymentDriver implements PaymentDriverInterface
 {
@@ -35,8 +36,14 @@ class OfflinePaymentDriver implements PaymentDriverInterface
                 ], DataCollection::class);
     }
 
-      public function process(SalesOrderData $sales_order){
-
+      public function process(SalesOrderData $sales_order)
+      {
+          SalesOrder::where('trx_id' , $sales_order->trx_id)
+            ->update([
+              'payment_payload' => [
+                'key' => 'value'
+              ]
+            ]);
       }
   
       public function shouldShowPayNowButton(SalesOrderData $sales_order) : bool

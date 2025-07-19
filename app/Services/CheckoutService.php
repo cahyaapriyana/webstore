@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Data\CheckoutData;
 use App\Data\SalesOrderData;
+use App\Events\SalesOrderCreated;
 use App\Models\Product;
 use App\Models\SalesOrder;
 use App\States\SalesOrder\Pending;
@@ -91,7 +92,15 @@ class CheckoutService {
 
         });
 
-        return SalesOrderData::fromModel($sales_order);
+        $data = SalesOrderData::fromModel($sales_order);
+        event(new SalesOrderCreated($data));
+
+        return $data;
+
+        // $data = SalesOrderData::fromModel($sales_order);
+        // event(new SalesOrderCreated($sales_order));
+
+        // return $data;
    
    
     }
