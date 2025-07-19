@@ -7,6 +7,7 @@ use App\Data\CheckoutData;
 use App\Data\SalesOrderData;
 use App\Models\Product;
 use App\Models\SalesOrder;
+use App\States\SalesOrder\Pending;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ class CheckoutService {
             $items = collect([]);
             $sales_order = SalesOrder::query()->create([
                 'trx_id' => "TRX-{$date}-{$random}",
-                'status' => 'pending',
+                'status' => Pending::class,
                 'customer_full_name' => $checkout_data->customer->full_name,
                 'customer_email' => $checkout_data->customer->email,
                 'customer_phone' => $checkout_data->customer->phone,
