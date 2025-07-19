@@ -52,6 +52,7 @@ class SalesOrderData extends Data
 
     ) {
         $this->sub_total = (float) $sub_total;
+        $this->sub_total_formatted = Number::currency($sub_total); // Tambahkan ini
         $this->shipping_total_formatted = Number::currency($shipping_cost);
         $this->total_formatted = Number::currency($total);
 
