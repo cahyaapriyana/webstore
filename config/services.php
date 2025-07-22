@@ -36,6 +36,7 @@ return [
     ],
 
     'moota' => [
-        'access_token' => env("MOOTA_ACCESS_TOKEN")
+        'access_token' => env("MOOTA_ACCESS_TOKEN"),
+        'accounts' => json_decode(env('MOOTA_ACCOUNTS', '[]'), true)
     ]
 ];
