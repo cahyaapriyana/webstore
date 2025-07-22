@@ -6,6 +6,7 @@ namespace App\States\SalesOrder\Transitions;
 use App\Data\SalesOrderData;
 use App\Events\SalesOrderCancelledEvent;
 use App\Models\SalesOrder;
+use App\Services\SalesOrderService;
 use App\States\SalesOrder\Cancel;
 use App\States\SalesOrder\Progress;
 use Spatie\ModelStates\Transition;
@@ -25,9 +26,10 @@ class PendingToCancel extends Transition
             'status' => Cancel::class
         ]);
 
-        event(new SalesOrderCancelledEvent(
-            SalesOrderData::fromModel($this->sales_order)
-        ));
+        $data = SalesOrderData::fromModel($this->sales_order);
+        app(SalesOrderService::class)->returnStock($data);
+
+        event(new SalesOrderCancelledEvent($data));
 
         return $this->sales_order;
     }
