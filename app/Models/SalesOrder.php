@@ -2,15 +2,17 @@
 
 namespace App\Models;
 
-use App\States\SalesOrder\SalesOrderState;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\ModelStates\HasStates;
+use Spatie\Activitylog\LogOptions;
+use Illuminate\Database\Eloquent\Model;
+use App\States\SalesOrder\SalesOrderState;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SalesOrder extends Model
 {
 
-    use HasStates;
+    use HasStates, LogsActivity;
     
 
     protected $with = ['items'];
@@ -25,4 +27,10 @@ class SalesOrder extends Model
         return $this->hasMany(SalesOrderItem::class);
     }
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+        ->logOnly(['status', 'total']);
+        // Chain fluent methods for configuration options
+    }
 }
