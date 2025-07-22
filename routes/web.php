@@ -5,6 +5,7 @@ use App\Livewire\Checkout;
 use App\Livewire\HomePage;
 use App\Models\SalesOrder;
 use App\Data\SalesOrderData;
+use App\Jobs\MootaPaymentJob;
 use App\Livewire\ProductCatalog;
 use App\Livewire\SalesOrderDetail;
 use App\Mail\SalesOrderCreatedMail;
@@ -24,10 +25,5 @@ Route::get('/order-confirmed/{sales_order:trx_id}', SalesOrderDetail::class)->na
 Route::view('/page', 'pages.page')->name('page');
 
 
-Route::get('/mailable', function() {
-    return new ShippingReceiptNumberUpdatedMail(
-        SalesOrderData::from(
-            SalesOrder::latest()->first()
-        )
-        );
-});
+
+Route::webhooks('moota/callback');
