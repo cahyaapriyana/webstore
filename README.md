@@ -1,4 +1,9 @@
 [![Demo](https://img.shields.io/badge/Demo-Visit-blue?style=for-the-badge&logo=google-chrome)](https://store.codemind.id/)
+<br><sub>
+Apabila demo tidak jalan, berarti server saya matikan.  
+Bisa chat saya untuk menghidupkan servernya melalui IG: [@cahya.yaml](https://www.instagram.com/cahya.yaml/)
+</sub>
+
 
 # Laravel Webstore
 
