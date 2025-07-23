@@ -1,3 +1,5 @@
+[![Demo](https://img.shields.io/badge/Demo-Visit-blue?style=for-the-badge&logo=google-chrome)](https://store.codemind.id/)
+
 # Laravel Webstore
 
 Aplikasi Webstore berbasis Laravel, dilengkapi dengan fitur manajemen produk, pesanan, user, integrasi pembayaran (Moota), pengiriman, dan dashboard admin berbasis Filament.
